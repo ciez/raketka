@@ -1,0 +1,17 @@
+ [
+   { 
+    "host": "localhost",
+     "port": 54001,
+     "service": "hello"
+   },
+   {
+     "host": "localhost",
+     "port": 54002,
+     "service": "hello"
+   },
+   {
+     "host": "localhost",
+     "port": 54003,
+     "service": "hello"
+   }
+ ] 
