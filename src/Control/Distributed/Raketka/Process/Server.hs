@@ -15,8 +15,8 @@ import qualified Data.Map as Map
 {- | * init 'proxy'
     * send out pings
     * 'receiveWait's for messages       -}
-server::Content c =>
-    Tagged c Server -> ServerId -> Process ()
+server::Content tag ps s c =>
+    Tagged tag (Server ps s) -> ServerId -> Process ()
 server s1@(Tagged server0) id0  = do
   P.spawnLocal (proxy s1)
 
@@ -34,24 +34,26 @@ server s1@(Tagged server0) id0  = do
       ]
 
 
--- | pipeline for sending msgs
-proxy::Content c =>
-    Tagged c Server -> Process ()
+-- | read & run /send processes/ from the pipeline 
+proxy::Content tag ps s c =>
+    Tagged tag (Server ps s) -> Process ()
 proxy (Tagged Server{..}) = forever $ join $
     liftIO $ atomically $ readTChan proxychan
 
 
 -- | init 'Server' store
-newServer::Content c =>
-     [ProcessId] -> Process (Tagged c Server)
-newServer pids0 = do
+newServer::Content tag ps s c =>
+     s -> ps -> Process (Tagged tag (Server ps s))
+newServer state0 pids0 = do
   pid1 <- getSelfPid
   liftIO $ do
-    s1 <- newTVarIO pids0
+    ps1 <- newTVarIO pids0
+    s1 <- newTVarIO state0
     c1 <- newTVarIO Map.empty
     o1 <- newTChanIO
     pure $ Tagged Server { 
-            servers = s1, 
+            servers = ps1, 
             proxychan = o1, 
-            spid = pid1
+            spid = pid1,
+            state = s1
         }

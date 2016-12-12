@@ -9,11 +9,14 @@ import Control.Distributed.Raketka.Type.Server
 import Control.Distributed.Raketka.NodeId as N
 
 {-| * registers own pid
-    * calls 'whereisRemoteAsync'
+    * calls 'whereisRemoteAsync' for each suggested peer
     * calls 'startServer'  
 -}
-master::Specific c =>
-    Backend -> Cluster -> Tagged c Int -> Process ()
+master::Specific tag ps s c =>
+    Backend 
+    -> Cluster          -- ^ server ids from config   
+    -> Tagged tag Int     -- ^ this server's idx in cluster  
+    -> Process ()
 master backend0 (Cluster ids0) idx1@(Tagged idx0) = do
   mynode1 <- getSelfNode
 

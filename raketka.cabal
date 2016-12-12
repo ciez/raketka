@@ -1,5 +1,5 @@
 name:                raketka
-version:             1.0
+version:             1.1
 build-type:          Simple
 synopsis:            basic distributed-process node with configurable peers
 description:         start multiple nodes, let them communicate. 
@@ -72,8 +72,7 @@ library
 executable raketka
   main-is:             Main.hs
   ghc-options:  -fwarn-unused-imports         
-  other-modules:      Control.Distributed.Raketka.Impl.LByteString
-                      Control.Distributed.Raketka.Impl.Inst
+  other-modules:      Control.Distributed.Raketka.Impl.Inst
 
   build-depends:       base >=4.8 && <5.0,
                        binary,

@@ -11,7 +11,7 @@ import Control.Distributed.Raketka.Type.Arg
 import Control.Distributed.Raketka.Impl.Inst as I
 
 
-remotable ['server]
+remotable ['I.server]
 
 
 main::IO()
@@ -25,4 +25,4 @@ main = do
     node1 <- newLocalNode backend1
     Node.runProcess node1 
             (master backend1 c1 
-                (Tagged $ read idx0::Tagged TByteString Int))
+                (Tagged $ read idx0::Tagged Slb Int))

@@ -18,18 +18,18 @@ calls
     
     depending on message type
 -} 
-handleRemoteMessage::Content c =>
-    Tagged c Server -> Message c -> Process ()
+handleRemoteMessage::Content tag ps s c =>
+    Tagged tag (Server ps s) -> Message c -> Process ()
 handleRemoteMessage s1@(Tagged Server{..}) msg0 =  
   case msg0 of
     Info ping1 pid1 -> newServerInfo s1 ping1 pid1 
     Message msg1 -> handleMessage s1 msg1
 
 
-{- | replies to 'whereisRemoteAsync' run on init 
+{- | handles replies to 'whereisRemoteAsync', run on init 
 in "Control.Distributed.Raketka.Master" -}
-handleWhereIsReply::Content c =>
-    Tagged c Server -> WhereIsReply -> Process () 
+handleWhereIsReply::Content tag ps s c =>
+    Tagged tag (Server ps s) -> WhereIsReply -> Process () 
 handleWhereIsReply _ (P.WhereIsReply _ Nothing) = pure ()
 handleWhereIsReply s1@(Tagged Server{..}) (WhereIsReply _ (Just pid0)) =
   liftIO $ atomically $ 
@@ -37,11 +37,12 @@ handleWhereIsReply s1@(Tagged Server{..}) (WhereIsReply _ (Just pid0)) =
 
 
 {- | 'ProcessMonitorNotification' e.g. connection lost  -} 
-handleMonitorNotification::Content c =>
-    Tagged c Server -> ProcessMonitorNotification -> Process ()
+handleMonitorNotification::Content tag ps s c =>
+    Tagged tag (Server ps s) -> ProcessMonitorNotification -> Process ()
 handleMonitorNotification
-       (Tagged Server{..}) (ProcessMonitorNotification _ pid0 _) = do
-  say (printf "server on %s dropped connection" (show pid0))
+       s1@(Tagged Server{..}) (ProcessMonitorNotification _ pid0 _) = do
+  say (printf "server on %s dropped connection" pid0)
   liftIO $ atomically $ do
     old_pids1 <- readTVar servers
-    writeTVar servers (filter (/= pid0) old_pids1)
+    writeTVar servers $ onPeerDisConnected' old_pids1 pid0
+  onPeerDisConnected s1 pid0 
