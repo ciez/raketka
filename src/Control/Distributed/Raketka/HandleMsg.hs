@@ -32,17 +32,16 @@ handleWhereIsReply::Content tag ps s c =>
     Tagged tag (Server ps s) -> WhereIsReply -> Process () 
 handleWhereIsReply _ (P.WhereIsReply _ Nothing) = pure ()
 handleWhereIsReply s1@(Tagged Server{..}) (WhereIsReply _ (Just pid0)) =
-  liftIO $ atomically $ 
-    sendRemote s1 pid0 $ Info Ping spid
+  la $ sendRemote s1 pid0 $ Info Ping spid
 
 
 {- | 'ProcessMonitorNotification' e.g. connection lost  -} 
 handleMonitorNotification::Content tag ps s c =>
     Tagged tag (Server ps s) -> ProcessMonitorNotification -> Process ()
 handleMonitorNotification
-       s1@(Tagged Server{..}) (ProcessMonitorNotification _ pid0 _) = do
-  say (printf "server on %s dropped connection" pid0)
-  liftIO $ atomically $ do
+       s1@(Tagged Server{..}) (ProcessMonitorNotification _ pid0 reason0) = do
+  say (printf "server on %s dropped connection. reason: %s" pid0 (show reason0))
+  la $ do
     old_pids1 <- readTVar servers
     writeTVar servers $ onPeerDisConnected' old_pids1 pid0
   onPeerDisConnected s1 pid0 

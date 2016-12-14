@@ -15,9 +15,10 @@ import Control.Distributed.Raketka.NodeId as N
 master::Specific tag ps s c =>
     Backend 
     -> Cluster          -- ^ server ids from config   
-    -> Tagged tag Int     -- ^ this server's idx in cluster  
+    -> Tagged tag Int   -- ^ this server's idx in cluster  
+    -> s                -- ^ init custom state
     -> Process ()
-master backend0 (Cluster ids0) idx1@(Tagged idx0) = do
+master backend0 (Cluster ids0) idx1@(Tagged idx0) state0 = do
   mynode1 <- getSelfNode
 
   let peers1 = N.nodeId <$> ids0
@@ -26,8 +27,9 @@ master backend0 (Cluster ids0) idx1@(Tagged idx0) = do
       peers2 = filter (/= mynode1) peers1
 
   mypid1 <- getSelfPid
+  
   register service1 mypid1
 
   forM_ peers2 $ \(peer1::NodeId) -> P.whereisRemoteAsync peer1 service1
 
-  startServer $ passTag idx1 this1
+  startServer (passTag idx1 this1) state0

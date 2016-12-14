@@ -22,8 +22,8 @@ instance Specific Slb (Set ProcessId) () ByteString where
         trace "handleMessage" $ 
         pure ()  --  todo 
 
-    startServer::Tagged Slb ServerId -> Process ()
-    startServer (Tagged id0) = server id0
+    startServer::Tagged Slb ServerId -> () -> Process ()
+    startServer (Tagged id0) _ = server id0 
 
     onPeerConnected::Tagged Slb Server_slb -> ProcessId -> Process ()
     onPeerConnected (Tagged s0) pid0 =

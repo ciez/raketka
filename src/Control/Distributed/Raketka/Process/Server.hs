@@ -21,9 +21,9 @@ server s1@(Tagged server0) id0  = do
   P.spawnLocal (proxy s1)
 
   pid1 <- getSelfPid
-  liftIO $ atomically $ sendRemoteAll s1 $ Info Ping pid1
+  la $ sendRemoteAll s1 $ Info Ping pid1
 
-  forever $
+  forever $ 
     P.receiveWait
       [ P.match $ H.handleRemoteMessage s1
       , P.match $ handleMonitorNotification s1
@@ -38,7 +38,7 @@ server s1@(Tagged server0) id0  = do
 proxy::Content tag ps s c =>
     Tagged tag (Server ps s) -> Process ()
 proxy (Tagged Server{..}) = forever $ join $
-    liftIO $ atomically $ readTChan proxychan
+    la $ readTChan proxychan
 
 
 -- | init 'Server' store
@@ -48,12 +48,11 @@ newServer state0 pids0 = do
   pid1 <- getSelfPid
   liftIO $ do
     ps1 <- newTVarIO pids0
-    s1 <- newTVarIO state0
     c1 <- newTVarIO Map.empty
     o1 <- newTChanIO
     pure $ Tagged Server { 
             servers = ps1, 
             proxychan = o1, 
             spid = pid1,
-            state = s1
+            state = state0
         }

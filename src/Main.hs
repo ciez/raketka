@@ -25,4 +25,5 @@ main = do
     node1 <- newLocalNode backend1
     Node.runProcess node1 
             (master backend1 c1 
-                (Tagged $ read idx0::Tagged Slb Int))
+                (Tagged $ read idx0::Tagged Slb Int)
+                ())

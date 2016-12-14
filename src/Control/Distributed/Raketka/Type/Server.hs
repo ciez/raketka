@@ -25,7 +25,7 @@ type Content tag ps s c = (PeerInfo ps, Specific tag ps s c, Serializable c, Sho
     __c__ is Message content type, implementation-specific  
 -}
 class Specific tag ps s c | tag -> ps, tag -> s, tag -> c where
-    startServer::Tagged tag ServerId -> Process ()
+    startServer::Tagged tag ServerId -> s -> Process ()
     handleMessage::Tagged tag (Server ps s) -> c -> Process ()
     onPeerConnected::Tagged tag (Server ps s) -> ProcessId -> Process ()
     onPeerDisConnected::Tagged tag (Server ps s) -> ProcessId -> Process ()
@@ -57,6 +57,9 @@ data Server ps s = Server
       { proxychan::TChan (Process ())  -- ^ pipeline for sending messages 
         , servers::TVar ps      -- ^ peer specific store 
         , spid::ProcessId       -- ^ this node's pid
-        , state::TVar s         -- ^ this node's common store 
+        , state::s              -- ^ this node's common store 
         }
-               
+
+
+la::STM a -> Process a
+la = liftIO . atomically                

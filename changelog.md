@@ -1,3 +1,8 @@
+#####  1.1.1
+    change common state from TVar s to s
+    
+    pass init common state  
+
 #####  1.1
     add custom state to Server
     
