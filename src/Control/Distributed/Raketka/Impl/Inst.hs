@@ -26,12 +26,19 @@ instance Specific Slb (Set ProcessId) () ByteString where
     startServer (Tagged id0) _ = server id0 
 
     onPeerConnected::Tagged Slb Server_slb -> ProcessId -> Process ()
-    onPeerConnected (Tagged s0) pid0 =
-        say $ printf "connected to %s" pid0
-    
+    onPeerConnected (Tagged s0) = tracePid "connected to %s"
+
     onPeerDisConnected::Tagged Slb Server_slb -> ProcessId -> Process ()
-    onPeerDisConnected (Tagged s0) pid0 =
-        say $ printf "disconnected %s" pid0
+    onPeerDisConnected (Tagged s0) = tracePid "disconnected %s"
+
+
+tracePid::String    -- ^ formattable string with a placeholder for pid
+        -> ProcessId
+        -> Process ()
+tracePid msg0 pid0 =
+        trace msg1 $
+        pure ()
+        where msg1 = printf msg0 pid0
 
 
 server::ServerId -> Process ()
