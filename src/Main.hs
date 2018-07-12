@@ -18,12 +18,19 @@ main::IO()
 main = do
     [path0, idx0] <- getArgs 
     Right c1 @ (Cluster conf1) <- readParse path0::IO (Either String Cluster)
-    let this1 = conf1 !! (read idx0::Int)
-        thisport1 = show $ port this1
-    backend1 <- initializeBackend (host this1) thisport1
+    let idx1 = read idx0::Int
+    idKnown c1 $ Tagged idx1
+
+
+idKnown::Cluster -> Tagged Slb Int -> IO()
+idKnown cl1@(Cluster cl0) idx1@(Tagged idx0) = do
+    backend1 <- initializeBackend (host id1) thisport1
                     (__remoteTable initRemoteTable)
     node1 <- newLocalNode backend1
     Node.runProcess node1 
-            (master backend1 c1 
-                (Tagged $ read idx0::Tagged Slb Int)
+            (master backend1 cl1 
+                idx1
                 ())
+    where thisport1 = show $ port id1
+          id1 = cl0 !! idx0  
+                
