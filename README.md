@@ -1,13 +1,4 @@
 ### raketka
-
-    note : package build may fail 
-
-    due to version clash between aeson, vector, primitive packages
-    
-    https://github.com/ciez/vector is a patched version of vector-0.11.0.0
-
-
-
     * basic distributed-process node
     * configurable peers
 

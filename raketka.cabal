@@ -1,8 +1,8 @@
 name:                raketka
-version:             1.1.1
+version:             1.1.2
 build-type:          Simple
-synopsis:            basic distributed-process node with configurable peers
-description:         start multiple nodes, let them communicate. 
+synopsis:            distributed-process node
+description:         peer node with simplelocalnet backend 
                      
 author:              Imants Cekusins
 maintainer:          Imants Cekusins
@@ -32,8 +32,9 @@ library
   ghc-options:  -fwarn-unused-imports  
     
   build-depends:       base >=4.8 && <5.0,
-                       binary, 
-                       containers, 
+                       binary,
+                       bytestring,
+                       containers,
                        stm,
                        distributed-process,
                        distributed-process-simplelocalnet,
@@ -73,6 +74,15 @@ executable raketka
   main-is:             Main.hs
   ghc-options:  -fwarn-unused-imports         
   other-modules:      Control.Distributed.Raketka.Impl.Inst
+                      Control.Distributed.Raketka.HandleMsg
+                      Control.Distributed.Raketka.Master
+                      Control.Distributed.Raketka.NewServerInfo
+                      Control.Distributed.Raketka.NodeId
+                      Control.Distributed.Raketka.Process.Send
+                      Control.Distributed.Raketka.Process.Server
+                      Control.Distributed.Raketka.Type.Arg
+                      Control.Distributed.Raketka.Type.Message
+                      Control.Distributed.Raketka.Type.Server
 
   build-depends:       base >=4.8 && <5.0,
                        binary,
@@ -130,8 +140,7 @@ test-suite spec
                         TemplateHaskell
                         ConstraintKinds
 
-
-  main-is: Main.hs
+  main-is: TestMain.hs
 
   build-depends:  base >= 4.8,
                   hspec >= 2.1.7,
