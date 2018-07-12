@@ -40,4 +40,3 @@
     
             1. path to config.json (see test-conf.json)
             2. idx of this node in the cluster: 0 .. (length Cluster -1)    
-         
