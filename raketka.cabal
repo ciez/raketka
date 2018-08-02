@@ -1,5 +1,5 @@
 name:                raketka
-version:             1.1.2
+version:             1.1.3
 build-type:          Simple
 synopsis:            distributed-process node
 description:         peer node with simplelocalnet backend 
@@ -127,7 +127,7 @@ executable raketka
 test-suite spec
   default-language:Haskell2010
   type: exitcode-stdio-1.0
-  ghc-options:  -fwarn-unused-imports  
+  ghc-options:  -fwarn-unused-imports -main-is TestMain
   hs-source-dirs: test, src
   default-extensions:   FlexibleInstances
                         MultiParamTypeClasses

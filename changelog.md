@@ -1,3 +1,6 @@
+#####  1.1.3
+    fix broken build. Reason: missing -main-is ghc-option  
+
 #####  1.1.2
     fix broken build. Reason: API change in dependency network-transport-tcp
     split Main to 2 funs  
